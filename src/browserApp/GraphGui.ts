@@ -47,6 +47,7 @@ function initGraph() {
    graph(graphElement); }
 
 function resetGraph (ls: LatticeStructure, layoutMode: LayoutMode) {
+   setGraphSize();
    switch (layoutMode) {
       case LayoutMode.fixed: {
          graph.forceEngine("d3");
@@ -76,6 +77,10 @@ function resetGraph (ls: LatticeStructure, layoutMode: LayoutMode) {
 function clearGraph() {
    graph.graphData({nodes: [], links: []}); }
 
+function setGraphSize() {
+   graph.width(window.innerWidth);
+   graph.height(window.innerHeight); }
+
 function setGraphVisibility (visible: boolean) {
    graphElement.classList.toggle("hidden", !visible);
    graphCloseButtonElement.classList.toggle("hidden", !visible);
@@ -88,8 +93,7 @@ function closeGraph() {
 function windowResizeEventHandler() {
    if (!graphVisible) {
       return; }
-   graph.width(window.innerWidth);
-   graph.height(window.innerHeight); }
+   setGraphSize(); }
 
 function documentKeyDownEventHandler (event: KeyboardEvent) {
    const keyName = genKeyName(event);
