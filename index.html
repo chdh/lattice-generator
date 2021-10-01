@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <link rel="stylesheet" href="app.css">
+ <script src="app.js"></script>
+ <title>Free Modular Lattice Generator</title>
+</head>
+<body>
+
+<h1>Free Modular Lattice Generator</h1>
+
+<div class="parmBlock" id="inputParms">
+ <label for="latticeType">Lattice type:</label>
+ <select id="latticeType"></select>
+ <label class="gap" for="layoutMode">Layout:</label>
+ <select id="layoutMode">
+  <option value="fixed">fixed</option>
+  <option value="d3">dynamic (d3)</option>
+  <option value="ngraph">dynamic (ngraph)</option>
+ </select>
+</div>
+
+<div class="actionButtons">
+ <button id="startButton">Start</button>
+</div>
+
+<div class="bottomNote">
+ Use the mouse pointer and the mouse wheel (or touch) to turn and zoom the graph's display.
+</div>
+
+<div class="footer">
+ Source code: <a href="https://github.com/chdh/lattice-generator">Github</a>,
+ Author: Christian d'Heureuse (chdh@inventec.ch)
+</div>
+
+<div id="graph" class="hidden"></div>
+<div id="graphCloseButton" class="hidden"></div>
+
+</body>
+</html>

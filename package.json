@@ -1,0 +1,17 @@
+{
+   "private": true,
+   "dependencies": {
+      "3d-force-graph": "^1.70.4",
+      "dialog-manager": "^1.0.3",
+      "source-map-support": "^0.5.19"
+   },
+   "devDependencies": {
+      "@types/node": "^16.9.4",
+      "@types/source-map-support": "^0.5.3",
+      "@types/three": "^0.131.1"
+   },
+   "scripts": {
+      "build": "tsc && rollup -c",
+      "lint": "eslint --ext .ts src/**"
+   }
+}

@@ -1,0 +1,89 @@
+*, *:before, *:after {
+   box-sizing: inherit; }
+
+html {
+   font-size: 15px;
+   box-sizing: border-box; }
+
+body, button, input, select, textarea {
+   font-family: Arial, sans-serif;
+   font-size: 14px; }
+
+body {
+   margin: 20px; }
+
+H1 {
+   font-size: 24px;
+   font-weight: 600;
+   margin-top: 0;
+   margin-bottom: 15px; }
+
+a {
+   color: #07C;
+   text-decoration: none; }
+a:hover {
+   text-decoration: underline; }
+
+.hidden {
+   display: none !important; }
+
+.parmBlock label {
+   margin-right: 5px; }
+
+.parmBlock label.gap {
+   margin-left: 20px; }
+
+div.actionButtons {
+   display: flex;
+   align-items: center;
+   margin-top: 20px; }
+
+div.actionButtons button {
+   width: 110px;
+   padding: 4px 0px;
+   margin-right: 20px; }
+
+div.bottomNote {
+   margin-top: 15px; }
+
+div.footer {
+   margin-top: 15px;
+   font-size: 13px; }
+
+/*--- 3D graph styling ---*/
+
+#graph {
+   position: absolute;
+   top: 0;
+   left: 0;
+   z-index: 10; }
+
+#graphCloseButton {
+   position: absolute;
+   color: #FFFFFF;
+   top: 0;
+   right: 0;
+   width: 45px;
+   height: 45px;
+   z-index: 11;
+   cursor: pointer;
+   background-repeat: no-repeat;
+   background-image: url("data:image/svg+xml;utf8, \
+     <svg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 300 300'> \
+       <path d='M 9 9 L 91 91 M 9 91 L 91 9' stroke='%23FFF' stroke-width='10px' fill='none'/> \
+     </svg>"); }
+
+html .scene-tooltip {
+   background-color: #333;
+   padding: 4px 7px;
+   border: 1px solid #666;
+   font-size: 18px; }
+
+html .scene-tooltip:empty {
+   display: none; }
+
+/*--- Dialog manager ---*/
+
+.dialogMgr_frame {
+   width: 200px;
+   text-align: center; }
