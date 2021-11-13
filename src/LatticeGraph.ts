@@ -51,23 +51,28 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
    const cornerCount = cornerInfo.cornerCount;
    const bottomDistances = graph.getDistances(elementTable.bottomElementNo);
    const topDistances = graph.getDistances(elementTable.topElementNo);
-   const graphHeight = bottomDistances[elementTable.topElementNo];
-   const graphWidth = getGraphWidth();
+   const graphHeight = bottomDistances[elementTable.topElementNo];             // graph height in edges
+   const graphWidth = getGraphWidth();                                         // graph width in edges
    const cornerHPos: number[][] = Array(cornerCount);
    for (let i = 0; i < cornerCount; i++) {
       const alpha = (i + 0.19) * 2 * Math.PI / cornerCount;
       const x = Math.cos(alpha);
       const z = -Math.sin(alpha);
       cornerHPos[i] = [x, z]; }
-   const generatorDistances: ArrayLike<number>[] = Array(generatorElementCount);
+   const generatorDistances: ArrayLike<number>[] = Array(generatorElementCount); // distances from generators in edges
    for (let generatorElementNo = 0; generatorElementNo < generatorElementCount; generatorElementNo++) {
       generatorDistances[generatorElementNo] = graph.getDistances(generatorElementNo); }
+   const cornerDistances: ArrayLike<number>[] = Array(cornerCount);              // distances from corners in edges
+   for (let cornerNo = 0; cornerNo < cornerCount; cornerNo++) {
+      cornerDistances[cornerNo] = getCornerDistances(cornerNo); }
    const positions: number[][] = Array(n);
    for (let elementNo = 0; elementNo < n; elementNo++) {
       const y = computeVerticalPosition(elementNo);
       const {x, z} = computeHorizontalPosition(elementNo);
       positions[elementNo] = [x, y, z]; }
    normalizeHorizontalExtent();
+   if (cornerCount == 2) {
+      inflateGraph(); }
    roundPositionValues();
    return {positions, graphHeight, graphWidth};
 
@@ -82,29 +87,33 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
       const distanceFromTop = topDistances[elementNo];
       return (distanceFromBottom - distanceFromTop) / (distanceFromBottom + distanceFromTop); }
 
+   function getCornerDistances (cornerNo: number) : ArrayLike<number> {
+      const generatorElementNos = cornerInfo.cornerGeneratorMap[cornerNo];
+      if (generatorElementNos.length == 1) {
+         return generatorDistances[generatorElementNos[0]]; }
+      const dists = new Int16Array(n);
+      for (let elementNo = 0; elementNo < n; elementNo++) {
+         let minDist = 9999;
+         for (const generatorElementNo of generatorElementNos) {
+            const dist = generatorDistances[generatorElementNo][elementNo];
+            minDist = Math.min(minDist, dist); }
+         dists[elementNo] = minDist; }
+      return dists; }
+
    function computeHorizontalPosition (elementNo: number) : {x: number; z: number} {
-      const cornerDistances: number[] = Array(cornerCount);
-      for (let cornerNo = 0; cornerNo < cornerCount; cornerNo++) {
-         cornerDistances[cornerNo] = getCornerDistance(elementNo, cornerNo); }
       let distSum = 0;
-      for (let i = 0; i < cornerCount; i++) {
-         distSum += cornerDistances[i]; }
+      for (let cornerNo = 0; cornerNo < cornerCount; cornerNo++) {
+         distSum += cornerDistances[cornerNo][elementNo]; }
       let x = 0;
       let z = 0;
       for (let cornerNo = 0; cornerNo < cornerCount; cornerNo++) {
-         const dist = cornerDistances[cornerNo];
+         const dist = cornerDistances[cornerNo][elementNo];
          const w = 1 - dist / distSum;
          x += w * cornerHPos[cornerNo][0];
          z += w * cornerHPos[cornerNo][1]; }
       return {x, z}; }
 
-   function getCornerDistance (elementNo: number, cornerNo: number) : number {
-      let minDist = 9999;
-      for (const generatorElementNo of cornerInfo.cornerGeneratorMap[cornerNo]) {
-         const dist = generatorDistances[generatorElementNo][elementNo];
-         minDist = Math.min(minDist, dist); }
-      return minDist; }
-
+   // Scales the horizontal coordinates into the range -1 .. +1.
    function normalizeHorizontalExtent() {
       let maxR = 0;
       for (let i = 0; i < n; i++) {
@@ -117,6 +126,46 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
          positions[i][0] *= r;
          positions[i][2] *= r; }}
 
+   // Some flat graphs, e.g. 2-2 (18 elements) and 3-2 (33 elements), have edge crossings that don't look nice in 2D.
+   // Therefore we inflate those graphs to 3D.
+   function inflateGraph() {
+      const inflateCornerElements = findInflateCornerElements();
+      if (!inflateCornerElements) {
+         return; }
+      for (let i = 0; i < 2; i++) {
+         const inflateCornerElementNo = inflateCornerElements[i];
+         const ext = 0.25;
+         const xDefl = cornerHPos[0][0] * (i == 0 ? 1 : -1) * ext;
+         const zDefl = cornerHPos[0][1] * (i == 1 ? 1 : -1) * ext;
+         for (let elementNo = 0; elementNo < n; elementNo++) {
+            const edgeDist = graph.getDistance(elementNo, inflateCornerElementNo);
+            const d = Math.max(graphHeight, graphWidth) / 2;
+            const w = Math.max(0, d - edgeDist) / d;
+            positions[elementNo][0] += xDefl * w;
+            positions[elementNo][2] += zDefl * w; }}}
+
+   function findInflateCornerElements() {
+      let minSalience = 9999;
+      let selElementNo1 = -1;
+      let selElementNo2 = -1;
+      for (let elementNo1 = 0; elementNo1 < n; elementNo1++) {
+         for (let elementNo2 = elementNo1 + 1; elementNo2 < n; elementNo2++) {
+            const dx = positions[elementNo1][0] - positions[elementNo2][0];
+            const dy = positions[elementNo1][1] - positions[elementNo2][1];
+            const dz = positions[elementNo1][2] - positions[elementNo2][2];
+            const geoDist = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
+            if (geoDist > 2.1 / graphHeight) {
+               continue; }
+            const edgeDist = graph.getDistance(elementNo1, elementNo2);
+            const salience = geoDist / edgeDist;
+            if (salience < minSalience) {
+               minSalience = salience;
+               selElementNo1 = elementNo1;
+               selElementNo2 = elementNo2; }}}
+      if (selElementNo1 < 0) {
+         return undefined; }
+      return [selElementNo1, selElementNo2]; }
+
    function roundPositionValues() {
       for (let i = 0; i < n; i++) {
          for (let j = 0; j < 3; j++) {
@@ -125,7 +174,7 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
 function round6 (v: number) : number {
    return Math.round(v * 1E6) / 1E6; }
 
-function getCenterElement (a: any[]) : any {
+function getCenterElement<T> (a: T[]) : T {
    return a[Math.floor(a.length / 2)]; }
 
 export class Graph {
@@ -184,6 +233,8 @@ export class Graph {
    public getDistance (vertexNoA: number, vertexNoB: number) : number {
       const n = this.vertexCount;
       assert(vertexNoA >= 0 && vertexNoB >= 0 && vertexNoA < n && vertexNoB < n);
+      if (vertexNoA == vertexNoB) {
+         return 0; }
       const visited = new Int8Array(n);
       let a1 = new Int16Array(n);
       let a2 = new Int16Array(n);
@@ -192,8 +243,6 @@ export class Graph {
       let distance = 0;
       a1[p1++] = vertexNoA;
       visited[vertexNoA] = 1;
-      if (vertexNoA == vertexNoB) {
-         return 0; }
       while (true) {
          distance++;
          assert(distance < n);

@@ -93,7 +93,7 @@ function webWorkerRequestMessageHandler (event: MessageEvent) {
    console.log("WebWorker request message received.", msg);
    switch (msg.id) {
       case "start": {
-         const latticeStructure = generateLattice(msg.latticeName);
+         const latticeStructure = generateLattice(<string>msg.latticeName);
          workerScope.postMessage({id: "complete", latticeStructure});
          break; }}}
 
