@@ -135,8 +135,8 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
       for (let i = 0; i < 2; i++) {
          const inflateCornerElementNo = inflateCornerElements[i];
          const ext = 0.25;
-         const xDefl = cornerHPos[0][0] * (i == 0 ? 1 : -1) * ext;
-         const zDefl = cornerHPos[0][1] * (i == 1 ? 1 : -1) * ext;
+         const xDefl = cornerHPos[0][1] * (i == 0 ? 1 : -1) * ext;
+         const zDefl = cornerHPos[0][0] * (i == 1 ? 1 : -1) * ext;
          for (let elementNo = 0; elementNo < n; elementNo++) {
             const edgeDist = graph.getDistance(elementNo, inflateCornerElementNo);
             const d = Math.max(graphHeight, graphWidth) / 2;
