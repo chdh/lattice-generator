@@ -5,6 +5,7 @@ import {ElementRelation, ElementRelationDef} from "./LatticeBase";
 export interface LatticeDef {
    elements:                           number;
    latticeName:                        string;
+   hide?:                              boolean;                                          // true = hide in GUI
    generatorElementNames:              string[];
    generatorElementRelations:          ElementRelationDef[]; }
 
@@ -12,12 +13,14 @@ export const latticeDefs: LatticeDef[] = [
    {
       elements:                  8,
       latticeName:               "2-1",
+      hide:                      true,                                                   // not interesting
       generatorElementNames:     ["a", "b", "c"],
       generatorElementRelations: [
          {elementName1: "a", elementName2: "b", relation: ElementRelation.lower} ] },
    {
       elements:                  13,
       latticeName:               "3-1",
+      hide:                      true,                                                   // not interesting
       generatorElementNames:     ["a", "b", "c", "d"],
       generatorElementRelations: [
          {elementName1: "a", elementName2: "b", relation: ElementRelation.lower},
@@ -28,6 +31,15 @@ export const latticeDefs: LatticeDef[] = [
       generatorElementNames:     ["a", "b", "c", "d"],
       generatorElementRelations: [
          {elementName1: "a", elementName2: "b", relation: ElementRelation.lower},
+         {elementName1: "c", elementName2: "d", relation: ElementRelation.lower} ] },
+   {
+      elements:                  19,
+      latticeName:               "4-1",
+      hide:                      true,                                                   // not interesting
+      generatorElementNames:     ["a", "b", "c", "d", "e"],
+      generatorElementRelations: [
+         {elementName1: "a", elementName2: "b", relation: ElementRelation.lower},
+         {elementName1: "b", elementName2: "c", relation: ElementRelation.lower},
          {elementName1: "c", elementName2: "d", relation: ElementRelation.lower} ] },
    {
       elements:                  26,
@@ -51,6 +63,24 @@ export const latticeDefs: LatticeDef[] = [
          {elementName1: "a", elementName2: "b", relation: ElementRelation.lower},
          {elementName1: "b", elementName2: "c", relation: ElementRelation.lower},
          {elementName1: "d", elementName2: "e", relation: ElementRelation.lower} ] },
+   {
+      elements:                  54,
+      latticeName:               "4-2",
+      generatorElementNames:     ["a", "b", "c", "d", "e", "f"],
+      generatorElementRelations: [
+         {elementName1: "a", elementName2: "b", relation: ElementRelation.lower},
+         {elementName1: "b", elementName2: "c", relation: ElementRelation.lower},
+         {elementName1: "c", elementName2: "d", relation: ElementRelation.lower},
+         {elementName1: "e", elementName2: "f", relation: ElementRelation.lower} ] },
+   {
+      elements:                  68,
+      latticeName:               "3-3",
+      generatorElementNames:     ["a", "b", "c", "d", "e", "f"],
+      generatorElementRelations: [
+         {elementName1: "a", elementName2: "b", relation: ElementRelation.lower},
+         {elementName1: "b", elementName2: "c", relation: ElementRelation.lower},
+         {elementName1: "d", elementName2: "e", relation: ElementRelation.lower},
+         {elementName1: "e", elementName2: "f", relation: ElementRelation.lower} ] },
    {
       elements:                  138,
       latticeName:               "2-1-1",

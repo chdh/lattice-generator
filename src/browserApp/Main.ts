@@ -17,6 +17,8 @@ async function startButton_clickEvent() {
 function startup2() {
    latticeTypeElement = <HTMLSelectElement>document.getElementById("latticeType")!;
    for (const def of latticeDefs) {
+      if (def.hide) {
+         continue; }
       const text = def.latticeName + " (" + def.elements + " elements)";
       const isDefault = def.latticeName == defaultLatticeName;
       latticeTypeElement.add(new Option(text, def.latticeName, isDefault, isDefault)); }

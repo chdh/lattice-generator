@@ -129,9 +129,13 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
    // Some flat graphs, e.g. 2-2 (18 elements) and 3-2 (33 elements), have edge crossings that don't look nice in 2D.
    // Therefore we inflate those graphs to 3D.
    function inflateGraph() {
-      const inflateCornerElements = findInflateCornerElements();
-      if (!inflateCornerElements) {
-         return; }
+      while (true) {
+         const inflateCornerElements = findInflateCornerElements();
+         if (!inflateCornerElements) {
+            return; }
+         inflateElements(inflateCornerElements); }}
+
+   function inflateElements (inflateCornerElements: number[]) {
       for (let i = 0; i < 2; i++) {
          const inflateCornerElementNo = inflateCornerElements[i];
          const ext = 0.25;
@@ -154,16 +158,20 @@ export function getLatticeGraphLayout (elementTable: ElementTable, graph: Graph,
             const dy = positions[elementNo1][1] - positions[elementNo2][1];
             const dz = positions[elementNo1][2] - positions[elementNo2][2];
             const geoDist = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
-            if (geoDist > 2.1 / graphHeight) {
+            const geoDistNormalized = geoDist / (2 / graphHeight);
+            if (geoDistNormalized > 1.05) {
                continue; }
             const edgeDist = graph.getDistance(elementNo1, elementNo2);
-            const salience = geoDist / edgeDist;
+            const salience = geoDistNormalized / edgeDist;
+            if (salience > 0.34) {
+               continue; }
             if (salience < minSalience) {
                minSalience = salience;
                selElementNo1 = elementNo1;
                selElementNo2 = elementNo2; }}}
       if (selElementNo1 < 0) {
          return undefined; }
+      // console.log("minSalience: " + minSalience);
       return [selElementNo1, selElementNo2]; }
 
    function roundPositionValues() {
