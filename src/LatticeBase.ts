@@ -286,6 +286,14 @@ export class ElementRelationMap {
          if (!diff) {
             return elementNo1; }}
       return -1; }
+   public equals (x: ElementRelationMap) : boolean {
+      if (this.n != x.n) {
+         return false; }
+      for (let elementNo1 = 0; elementNo1 < this.n; elementNo1++) {
+         for (let elementNo2 = elementNo1 + 1; elementNo2 < this.n; elementNo2++) {
+            if (this.get(elementNo1, elementNo2) != x.get(elementNo1, elementNo2)) {
+               return false; }}}
+      return true; }
    public dump (elementTable: ElementTable) : string {
       let s = "";
       for (let elementNo1 = 0; elementNo1 < this.n; elementNo1++) {

@@ -14,7 +14,7 @@ export class LatticeController {
    public  generatorElementCount:      number;                                 // number of generator elements
    public  elementTable:               ElementTable;
    public  relMap:                     ElementRelationMap;
-   public  combMap:                    ElementCombinationMap;
+   public  combMap:                    ElementCombinationMap;                  // registry of created element combinations
 
    // Speed optimization variables:
    private tempInt16Array1:            Int16Array;

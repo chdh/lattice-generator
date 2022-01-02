@@ -26,7 +26,7 @@ function createNode (ls: LatticeStructure, i: number, layoutMode: LayoutMode) {
       node.fz = node.z; }
    const hue = (Math.atan2(pos[2], pos[0]) / Math.PI * 180 + 360 + 20) % 360;
    const sat = Math.sqrt(pos[0] ** 2 + pos[2] ** 2) * 100;
-   node.color = "hsl(" + hue.toFixed(1) + ", " + sat.toFixed(1) + "%, 55%)";
+   node.color = "hsl(" + hue.toFixed(1) + ", " + sat.toFixed() + "%, 55%)";
    node.name = ls.elementNames[i].replace(/\+/g, "\u22C1").replace(/\*/g, "\u22C0");
    return node; }
 

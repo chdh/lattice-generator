@@ -6,10 +6,10 @@ import {assert} from "../Utils";
 import {performance} from "perf_hooks";
 import * as SourceMapSupport from "source-map-support";
 
-const consistencyCheckEnabled = false;
-const relationsCheckEnabled   = false;
+const consistencyCheckEnabled = true;
+const relationsCheckEnabled   = true;
 const logTime                 = false;
-const latticeName             = "1-1-1";
+const latticeName             = "4-4";
 
 function main() {
    SourceMapSupport.install();
