@@ -9,7 +9,7 @@ import * as SourceMapSupport from "source-map-support";
 const consistencyCheckEnabled = true;
 const relationsCheckEnabled   = true;
 const logTime                 = false;
-const latticeName             = "4-4";
+const latticeName             = "6-3";
 
 function main() {
    SourceMapSupport.install();
