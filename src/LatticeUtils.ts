@@ -25,7 +25,7 @@ export function evalSimpleElementCombination (relMap: ElementRelationMap, comb: 
    if (comb.elementNo1 == comb.elementNo2) {
       return comb.elementNo1; }
    const rel = relMap.get(comb.elementNo1, comb.elementNo2);
-   if (!rel) {
+   if (!rel) {                                                       // elements are not related
       return -1; }
    return (rel == getOperatorRelation(comb.operator)) ? comb.elementNo1 : comb.elementNo2; }
 
