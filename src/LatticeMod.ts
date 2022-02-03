@@ -38,12 +38,13 @@ export function findModularAliasCombinations (comb0: ElementCombination, element
       addCombinations2(comb.elementNo1, comb.elementNo2, comb.operator);
       addCombinations2(comb.elementNo2, comb.elementNo1, comb.operator); }
 
-   // elementNo1 and elementNo2 correspond to a and (b * x) or to b and (a + x) in the modular rule formula.
+   // elementNo1 and elementNo2 correspond to a and (b * x) in the modular rule formula.
    // (recursive)
    function addCombinations2 (elementNo1: number, elementNo2: number, operator: ElementOperator) {
       const e2 = elementTable.get(elementNo2);
       for (const comb2 of e2.combinations) {                         // loop over alias combinations of element 2
-         if (comb2.operator == operator) {
+         // comb2 correspond to (b * x) in the modular rule formula.
+         if (comb2.operator == operator) {                           // inner operator must be opposite of outer operator
             continue; }
          addCombinations3(elementNo1, comb2.elementNo1, comb2.elementNo2, operator);
          addCombinations3(elementNo1, comb2.elementNo2, comb2.elementNo1, operator); }
